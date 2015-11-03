@@ -45,6 +45,11 @@ class DataInt(int):
             di.unique_id = self.unique_id
             return di
 
+    def __add__(self, y):
+        di = DataInt(self.real+y.real)
+        di.unique_id = self.unique_id
+        return di
+
     def remove(self):
         del self
 
