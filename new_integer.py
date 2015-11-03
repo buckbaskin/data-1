@@ -21,7 +21,7 @@ class DataInt(int):
             val.__init__(args[0])
         val.strong_ref = val
         return weakref.proxy(val)
-    
+
     def __init__(self, i_, local_id_tracker=None):
         super(DataInt, self).__init__(i_)
         if local_id_tracker:
@@ -29,8 +29,8 @@ class DataInt(int):
 
         try:
             self.unique_id = [gidt.get_id()]
-        except NameError as ne:
-            raise(EnvironmentError('Data Workspace not yet set'))
+        except NameError:
+            raise EnvironmentError('Data Workspace not yet set')
 
     def __repr__(self):
         return str(self.real)
@@ -41,21 +41,15 @@ class DataInt(int):
     def __abs__(self):
         if self.real >= 0:
             di = DataInt(self.real)
-            di.unique_id = self.unique_id
+            di.unique_id.extend(self.unique_id)
             return di
         else:
             di = DataInt(-1*self.real)
-            di.unique_id = self.unique_id
+            di.unique_id.extend(self.unique_id)
             return di
 
     def __add__(self, y):
         di = DataInt(self.real+y.real)
-        di.unique_id.extend(self.unique_id)
-        di.unique_id.extend(y.unique_id)
-        return di
-
-    def __sub__(self, y):
-        di = DataInt(self.real-y.real)
         di.unique_id.extend(self.unique_id)
         di.unique_id.extend(y.unique_id)
         return di
@@ -100,7 +94,6 @@ class DataInt(int):
     def __invert__(self):
         di = DataInt(-1*self.real - 1)
         di.unique_id.extend(self.unique_id)
-        di.unique_id.extend(y.unique_id)
         return di
 
     # TODO def __long__(self):
@@ -127,7 +120,7 @@ class DataInt(int):
 
     def __neg__(self):
         di = DataInt(-1*self.real)
-        di.unique_id = self.unique_id
+        di.unique_id.extend(self.unique_id)
         return di
 
     # TODO def __nonzero__(self, y):
@@ -137,11 +130,6 @@ class DataInt(int):
         di = DataInt(self.real | y.real)
         di.unique_id.extend(self.unique_id)
         di.unqiue_id.extend(y.unique_id)
-        return di
-
-    def __neg__(self):
-        di = DataInt(self.real)
-        di.unique_id = self.unique_id
         return di
 
     def __pow__(self, y, z=None):
@@ -179,8 +167,8 @@ class DataInt(int):
     def __rdivmod__(self, y):
         dia = DataInt(y.real // self.real)
         dib = DataInt(y.real % self.real)
-        dia.unique_id = self.unique_id.extend(y.unique_id)
-        dib.unique_id = self.unique_id.extend(y.unique_id)
+        dia.unique_id.extend(self.unique_id.extend(y.unique_id))
+        dib.unique_id.extend(self.unique_id.extend(y.unique_id))
         return (dia, dib,)
 
     def __rfloordiv__(self, y):
@@ -190,7 +178,7 @@ class DataInt(int):
         return di
 
     def __rlshift__(self, y):
-        di = DataInt(y.real << shift.real)
+        di = DataInt(y.real << self.real)
         di.unique_id.extend(self.unique_id)
         di.unique_id.extend(y.unique_id)
         return di
@@ -224,15 +212,15 @@ class DataInt(int):
         else:
             di = DataInt(pow(x.real, self.real))
             di.unique_id.extend(self.unique_id)
-            di.unique_id.extend(y.unique_id)
+            di.unique_id.extend(x.unique_id)
             return di
-    
+
     def __rrshift__(self, y):
         di = DataInt(y.real >> self.real)
         di.unique_id.extend(self.unique_id)
         di.unique_id.extend(y.unique_id)
         return di
-    
+
     def __rshift__(self, y):
         di = DataInt(self.real >> y.real)
         di.unique_id.extend(self.unique_id)
@@ -271,7 +259,7 @@ class DataInt(int):
 
     def __trunc__(self):
         di = DataInt(self.real)
-        di.unique_id = self.unique_id
+        di.unique_id.extend(self.unique_id)
         return di
 
     def __xor__(self, y):
@@ -283,7 +271,6 @@ class DataInt(int):
     def conjugate(self):
         di = DataInt(self.real)
         di.unique_id.extend(self.unique_id)
-        di.unique_id.extend(y.unique_id)
         return di
 
     def remove(self):
