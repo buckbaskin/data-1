@@ -64,6 +64,7 @@ class DataInt(int):
         return di
 
     def __div__(self, y):
+        # TODO(buckbaskin): check if y is DataFloat, float, and convert
         di = DataInt(self.real / y.real)
         di.unique_id = self.unique_id.extend(y.unique_id)
         return di
@@ -78,16 +79,81 @@ class DataInt(int):
         dib.unique_id = self.unique_id.extend(y.unique_id)
         return (dia, dib,)
 
+    # TODO def __float__(self):
+    # TODO(buckbaskin): implement to DataFloat with more data types
+
     def __floordiv__(self, y):
         di = DataInt(self.real // y.real)
         di.unique_id = self.unique_id.extend(y.unique_id)
         return di
 
+    # TODO def __hash__(self):
+    # TODO(buckbaskin): possibly implement a new hash function
+
+    def __invert__(self):
+        di = DataInt(-1*self.real - 1)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    # TODO def __long__(self):
+    # TODO(buckbaskin): implement to DataLong with more data types
+
+    def __lshift__(self, y):
+        di = DataInt(self.real << y.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    def __mod__(self, y):
+        di = DataInt(self.real % y.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    def __mul__(self, y):
+        # TODO(buckbaskin): check if y is DataFloat, float, and convert
+        di = DataInt(self.real * y,real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    def __neg__(self):
+        di = DataInt(-1*self.real)
+        di.unique_id = self.unique_id
+        return di
+
+    # TODO def __nonzero__(self, y):
+    # TODO(buckbaskin): update this when there is a DataBool
+
+    def __or__(self, y):
+        di = DataInt(self.real | y.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    def __neg__(self):
+        di = DataInt(self.real)
+        di.unique_id = self.unique_id
+        return di
+
+    def __pow__(self, y, z=None):
+        if z is not None:
+            di = DataInt(pow(self.real, y.real, z.real))
+            di.unique_id = self.unique_id.extend(y.unique_id).extend(z.unique_id)
+            return di
+        else:
+            di = DataInt(pow(self.real, y.real))
+            di.unique_id = self.unique_id.extend(y.unique_id)
+            return di
+
+    def __radd__(self, y):
+        di = DataInt(y.real+self.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    def __rshift__(self, y):
+        di = DataInt(self.real >> y.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
     def remove(self):
         del self
-
-    # TODO def __float__(self):
-    # TODO(buckbaskin): implement to DataFloat with more data types
 
 def setup_data_workspace():
     global gidt
