@@ -63,8 +63,31 @@ class DataInt(int):
         di.unique_id = self.unique_id.extend(y.unique_id)
         return di
 
+    def __div__(self, y):
+        di = DataInt(self.real / y.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    # TODO def __coerce__(self, y)
+    # TODO(buckbaskin): implement coerce with more data types
+
+    def __divmod__(self, y):
+        dia = DataInt(self.real // y.real)
+        dib = DataInt(self.real % y.real)
+        dia.unique_id = self.unique_id.extend(y.unique_id)
+        dib.unique_id = self.unique_id.extend(y.unique_id)
+        return (dia, dib,)
+
+    def __floordiv__(self, y):
+        di = DataInt(self.real // y.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
     def remove(self):
         del self
+
+    # TODO def __float__(self):
+    # TODO(buckbaskin): implement to DataFloat with more data types
 
 def setup_data_workspace():
     global gidt
