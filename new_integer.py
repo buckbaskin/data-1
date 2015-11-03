@@ -36,7 +36,7 @@ class DataInt(int):
         return str(self.real)
 
     def __str__(self):
-        return __repr__(self)
+        return self.__repr__()
 
     def __abs__(self):
         if self.real >= 0:
@@ -50,23 +50,27 @@ class DataInt(int):
 
     def __add__(self, y):
         di = DataInt(self.real+y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     def __sub__(self, y):
         di = DataInt(self.real-y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     def __and__(self, y):
         di = DataInt(self.real&y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     def __div__(self, y):
         # TODO(buckbaskin): check if y is DataFloat, float, and convert
         di = DataInt(self.real / y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     # TODO def __coerce__(self, y)
@@ -75,8 +79,10 @@ class DataInt(int):
     def __divmod__(self, y):
         dia = DataInt(self.real // y.real)
         dib = DataInt(self.real % y.real)
-        dia.unique_id = self.unique_id.extend(y.unique_id)
-        dib.unique_id = self.unique_id.extend(y.unique_id)
+        dia.unique_id.extend(self.unique_id)
+        dia.unique_id.extend(y.unique_id)
+        dib.unique_id.extend(self.unique_id)
+        dib.unique_id.extend(y.unique_id)
         return (dia, dib,)
 
     # TODO def __float__(self):
@@ -84,7 +90,8 @@ class DataInt(int):
 
     def __floordiv__(self, y):
         di = DataInt(self.real // y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     # TODO def __hash__(self):
@@ -92,7 +99,8 @@ class DataInt(int):
 
     def __invert__(self):
         di = DataInt(-1*self.real - 1)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     # TODO def __long__(self):
@@ -100,18 +108,21 @@ class DataInt(int):
 
     def __lshift__(self, y):
         di = DataInt(self.real << y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     def __mod__(self, y):
         di = DataInt(self.real % y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     def __mul__(self, y):
         # TODO(buckbaskin): check if y is DataFloat, float, and convert
-        di = DataInt(self.real * y,real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di = DataInt(self.real * y.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     def __neg__(self):
@@ -124,7 +135,8 @@ class DataInt(int):
 
     def __or__(self, y):
         di = DataInt(self.real | y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unqiue_id.extend(y.unique_id)
         return di
 
     def __neg__(self):
@@ -135,25 +147,149 @@ class DataInt(int):
     def __pow__(self, y, z=None):
         if z is not None:
             di = DataInt(pow(self.real, y.real, z.real))
-            di.unique_id = self.unique_id.extend(y.unique_id).extend(z.unique_id)
+            di.unique_id.extend(self.unique_id)
+            di.unique_id.extend(y.unique_id)
+            di.unique_id.extend(z.unique_id)
             return di
         else:
             di = DataInt(pow(self.real, y.real))
-            di.unique_id = self.unique_id.extend(y.unique_id)
+            di.unique_id.extend(self.unique_id)
+            di.unique_id.extend(y.unique_id)
             return di
 
     def __radd__(self, y):
         di = DataInt(y.real+self.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
+    def __rand__(self, y):
+        di = DataInt(y.real&self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rdiv__(self, y):
+        # TODO(buckbaskin): check if y is DataFloat, float, and convert
+        di = DataInt(y.real / self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rdivmod__(self, y):
+        dia = DataInt(y.real // self.real)
+        dib = DataInt(y.real % self.real)
+        dia.unique_id = self.unique_id.extend(y.unique_id)
+        dib.unique_id = self.unique_id.extend(y.unique_id)
+        return (dia, dib,)
+
+    def __rfloordiv__(self, y):
+        di = DataInt(y.real // self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rlshift__(self, y):
+        di = DataInt(y.real << shift.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rmod__(self, y):
+        di = DataInt(y.real % self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rmul__(self, y):
+        # TODO(buckbaskin): check if y is DataFloat, float, and convert
+        di = DataInt(y.real * self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __ror__(self, y):
+        di = DataInt(y.real | self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rpow__(self, x, z=None):
+        if z is not None:
+            di = DataInt(pow(x.real, self.real, z.real))
+            di.unique_id.extend(self.unique_id)
+            di.unique_id.extend(x.unique_id)
+            di.unique_id.extend(z.unique_id)
+            return di
+        else:
+            di = DataInt(pow(x.real, self.real))
+            di.unique_id.extend(self.unique_id)
+            di.unique_id.extend(y.unique_id)
+            return di
+    
+    def __rrshift__(self, y):
+        di = DataInt(y.real >> self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+    
     def __rshift__(self, y):
         di = DataInt(self.real >> y.real)
-        di.unique_id = self.unique_id.extend(y.unique_id)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rsub__(self, y):
+        di = DataInt(y.real - self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rtruediv__(self, y):
+        di = DataInt(1.0*y.real / self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __rxor__(self, y):
+        di = DataInt(y.real^self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __sub__(self, y):
+        di = DataInt(self.real - y.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __truediv__(self, y):
+        di = DataInt(1.0*self.real / y.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def __trunc__(self):
+        di = DataInt(self.real)
+        di.unique_id = self.unique_id
+        return di
+
+    def __xor__(self, y):
+        di = DataInt(self.real^y.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
+        return di
+
+    def conjugate(self):
+        di = DataInt(self.real)
+        di.unique_id.extend(self.unique_id)
+        di.unique_id.extend(y.unique_id)
         return di
 
     def remove(self):
-        del self
+        # take steps to remove this data point
+        # TODO(buckbaskin): define what this operation should do
+        pass
 
 def setup_data_workspace():
     global gidt
