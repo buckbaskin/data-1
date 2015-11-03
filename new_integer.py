@@ -25,15 +25,18 @@ class DataInt(int):
     def __init__(self, i_, local_id_tracker=None):
         super(DataInt, self).__init__(i_)
         if local_id_tracker:
-            self.unique_id = local_id_tracker.get_id()
+            self.unique_id = [local_id_tracker.get_id()]
 
         try:
-            self.unique_id = gidt.get_id()
+            self.unique_id = [gidt.get_id()]
         except NameError as ne:
             raise(EnvironmentError('Data Workspace not yet set'))
 
     def __repr__(self):
         return str(self.real)
+
+    def __str__(self):
+        return __repr__(self)
 
     def __abs__(self):
         if self.real >= 0:
@@ -47,7 +50,17 @@ class DataInt(int):
 
     def __add__(self, y):
         di = DataInt(self.real+y.real)
-        di.unique_id = self.unique_id
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    def __sub__(self, y):
+        di = DataInt(self.real-y.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
+        return di
+
+    def __and__(self, y):
+        di = DataInt(self.real&y.real)
+        di.unique_id = self.unique_id.extend(y.unique_id)
         return di
 
     def remove(self):
