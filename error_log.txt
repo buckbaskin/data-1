@@ -1,0 +1,17 @@
+trace-variations don't play well with non-trace data
+ex. __radd__ assumes that it will get trace item with a unique_id
+
+Traceback (most recent call last):
+  File "simple_sum.py", line 46, in <module>
+    main()
+  File "simple_sum.py", line 36, in main
+    s.update(studenta)
+  File "/home/buck/Github/data-1/trace_calculation.py", line 20, in update
+    new_state = self.operation(data)
+  File "simple_sum.py", line 18, in operation
+    sa.set_data(self.score+new_score, self.count+1)
+  File "/home/buck/Github/data-1/trace_nums.py", line 130, in __radd__
+    source=self.unique_id.union(y.unique_id))
+AttributeError: 'int' object has no attribute 'unique_id'
+
+---
