@@ -2,6 +2,92 @@ import hashlib
 import time
 import weakref
 
+# use the math_data decorator to take any function and convert its output to 
+# traced data
+
+def that_decorator_though(function):
+    print 'that decorator though'
+    def function_wrapper(self, *args, **vargs):
+        print 'as;dlkfj called'
+        val = function(self, *args=[], **vargs)
+        dval = Data_rxyzabcaakjsdf123(val)
+        print 'dval = '+str(type(dval))
+        return dval
+    function_wrapper.id_attribute = 'strong arms'
+    return function_wrapper
+
+def math_data(size):
+    print 'math_data called with size '+str(size)
+    def func_collector(function):
+        if size <= 0:
+            print 'creating level 0 function_wrapper'
+            def function_wrapper(self):
+                print 'function_wrapper callled'
+                val = function(self)
+                print 'I got val of type '+str(type(val))
+                if hasattr(self, 'unique_id'):
+                    return Data_rxyzabc123(val, self.unique_id)
+                else:
+                    return Data_rxyzabc123(val)
+            print 'returning level 0 fw'
+            function_wrapper.id_attribute = 'solid gold'
+            return function_wrapper
+        elif size == 1:
+            def function_wrapper(self, y):
+                val = function(self, y)
+                if hasattr(self, 'unique_id'):
+                    if hasattr(y, 'unique_id'):
+                        return Data_rxyzabc123(val, self.unique_id.union(y.unique_id))
+                    return Data_rxyzabc123(val, self.unique_id)
+                else:
+                    return Data_rxyzabc123(val)
+            print 'returning level 1 fw'
+            return function_wrapper
+        elif size == 2:
+            def function_wrapper(self, y, z):
+                val = function(self, y, z)
+                if hasattr(self, 'unique_id'):
+                    if hasattr(y, 'unique_id'):
+                        if hasattr(z, 'unique_id'):
+                            return Data_rxyzabc123(val, self.unique_id.union(y.unique_id).union(z.unique_id))
+                        return Data_rxyzabc123(val, self.unique_id.union(y.unique_id))
+                    elif hasattr(z, 'unique_id'):
+                        return Data_rxyzabc123(val, self.unique_id.union(z.unique_id))
+                    return Data_rxyzabc123(val, self.unique_id)
+                else:
+                    return Data_rxyzabc123(val)
+            print 'returning level 2 fw'
+            return function_wrapper
+        elif size >= 2:
+            print 'size too too too big'
+            return function
+    return func_collector
+
+# convert any data to trace data with the data function
+def Data_rxyzabc123(info, user_id=None):
+    print 'Data called with info type: '+str(type(info))
+    if isinstance(info, float):
+        if user_id is None:
+            return DataFloat(info)
+        else:
+            return DataFloat(info, source=user_id)
+
+    elif isinstance(info, int):
+        if user_id is None:
+            return DataInt(info)
+        else:
+            return DataInt(info, source=user_id)
+
+    # TODO(buckbaskin): update when new types of data are defined
+    # define long, bool, string, [list]
+    # dicts are calculations? that return their value, but track everything by element
+    # lists are calculations? that return their value, but track everything by element
+    # calculate a special diff by element, or include this in diff calc
+    # objects passed in are just calculations
+
+    else: # there is no traceable form for the data yet
+        return info
+
 class GlobalIdTracker(object):
     def __init__(self):
         self.next_id = 1
@@ -55,8 +141,9 @@ class DataInt(int):
             return DataInt(-1*self.real, source=self.unique_id)
 
     def __add__(self, y):
-        return DataInt(self.real+y.real, 
-            source=self.unique_id.union(y.unique_id))
+        if isinstance(y, float):
+            return DataInt(self.real+y.real, 
+                source=self.unique_id.union(y.unique_id))
 
     def __and__(self, y):
         return DataInt(self.real&y.real, 
@@ -250,17 +337,22 @@ class DataFloat(float):
 
         self.unique_id = self.unique_id.union(source)
 
+        self.__abs__ = that_decorator_though(self.__abs__)
+        print '__abs__: '+str(self.__abs__.id_attribute)
+
     def __repr__(self):
         return str(self.real)
 
     def __str__(self):
         return self.__repr__()
 
-    def __abs__(self):
-        if self.real >= 0:
-            return DataFloat(self.real, source=self.unique_id)
-        else:
-            return DataFloat(-1*self.real, source=self.unique_id)
+    # __abs__ = math_data(0)(float.__abs__)
+
+    # def __abs__(self):
+    #     if self.real >= 0:
+    #         return DataFloat(self.real, source=self.unique_id)
+    #     else:
+    #         return DataFloat(-1*self.real, source=self.unique_id)
 
     def __add__(self, y):
         return DataFloat(self.real+y.real, 
@@ -300,16 +392,8 @@ class DataFloat(float):
     # TODO def __hash__(self):
     # TODO(buckbaskin): possibly implement a new hash function
 
-    def __invert__(self):
-        return DataFloat(-1*self.real - 1, 
-            source=self.unique_id.union(y.unique_id))
-
     # TODO def __long__(self):
     # TODO(buckbaskin): implement to DataLong with more data types
-
-    def __lshift__(self, y):
-        return DataFloat(self.real << y.real, 
-            source=self.unique_id.union(y.unique_id))
 
     def __mod__(self, y):
         return DataFloat(self.real % y.real, 
@@ -329,10 +413,6 @@ class DataFloat(float):
     # TODO def __nonzero__(self, y):
     # TODO(buckbaskin): update this when there is a DataBool
 
-    def __or__(self, y):
-        return DataFloat(self.real | y.real, 
-            source=self.unique_id.union(y.unique_id))
-
     def __pow__(self, y, z=None):
         if z is not None:
             return DataFloat(pow(self.real, y.real, z.real), 
@@ -343,10 +423,6 @@ class DataFloat(float):
 
     def __radd__(self, y):
         return DataFloat(y.real+self.real, 
-            source=self.unique_id.union(y.unique_id))
-
-    def __rand__(self, y):
-        return DataFloat(y.real&self.real, 
             source=self.unique_id.union(y.unique_id))
 
     def __rdiv__(self, y):
@@ -362,9 +438,6 @@ class DataFloat(float):
     def __rfloordiv__(self, y):
         return DataFloat(y.real // self.real, source=self.unique_id.union(y.unique_id))
 
-    def __rlshift__(self, y):
-        return DataFloat(y.real << self.real, source=self.unique_id.union(y.unique_id))
-
     def __rmod__(self, y):
         return DataFloat(y.real % self.real, source=self.unique_id.union(y.unique_id))
 
@@ -372,29 +445,17 @@ class DataFloat(float):
         # TODO(buckbaskin): check if y is DataFloat, float, and convert
         return DataFloat(y.real * self.real, source=self.unique_id.union(y.unique_id))
 
-    def __ror__(self, y):
-        return DataFloat(y.real | self.real, source=self.unique_id.union(y.unique_id))
-
     def __rpow__(self, x, z=None):
         if z is not None:
             return DataFloat(pow(x.real, self.real, z.real), source=self.unique_id.union(y.unique_id).union(z.unique_id))
         else:
             return DataFloat(pow(x.real, self.real), source=self.unique_id.union(y.unique_id))
 
-    def __rrshift__(self, y):
-        return DataFloat(y.real >> self.real, source=self.unique_id.union(y.unique_id))
-
-    def __rshift__(self, y):
-        return DataFloat(self.real >> y.real, source=self.unique_id.union(y.unique_id))
-
     def __rsub__(self, y):
         return DataFloat(y.real - self.real, source=self.unique_id.union(y.unique_id))
 
     def __rtruediv__(self, y):
         return DataFloat(1.0*y.real / self.real, source=self.unique_id.union(y.unique_id))
-
-    def __rxor__(self, y):
-        return DataFloat(y.real^self.real, source=self.unique_id.union(y.unique_id))
 
     def __sub__(self, y):
         return DataFloat(self.real - y.real, source=self.unique_id.union(y.unique_id))
@@ -403,10 +464,10 @@ class DataFloat(float):
         return DataFloat(1.0*self.real / y.real, source=self.unique_id.union(y.unique_id))
 
     def __trunc__(self):
-        return DataFloat(self.real, source=self.unique_id)
-
-    def __xor__(self, y):
-        return DataFloat(self.real^y.real, source=self.unique_id.union(y.unique_id))
+        if self.real >= 0:
+            return DataFloat(self.real - self.real % 1, source=self.unique_id)
+        else:
+            return DataFloat(self.real + self.real % 1, soruce=self.unique_id)
 
     def conjugate(self):
         return DataFloat(self.real, source=self.unique_id)
@@ -415,6 +476,7 @@ class DataFloat(float):
         # take steps to remove this data point
         # TODO(buckbaskin): define what this operation should do
         pass
+
 
 def setup_data_workspace():
     global gidt

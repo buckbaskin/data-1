@@ -23,8 +23,6 @@ class StudentAverage(Calculation):
             return DataFloat(0.0)
         return self.score*1.0/self.count
 
-
-
 def main():
     s = StudentAverage()
     print 's1: '+str(s.data_to_value())
@@ -52,7 +50,7 @@ def main():
 
     print 'add student d: score 50'
     s.update(studentd)
-    print 's6: '+str(s.data_to_value())
+    print 's6   : '+str(s.data_to_value())
 
 
 if __name__ == '__main__':
