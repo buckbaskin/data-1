@@ -31,16 +31,29 @@ def main():
     
     studenta = DataInt(75)
     studentb = DataInt(25)
-    print 's2: '+str(s.data_to_value())
-    
+    studentc = DataInt(100)
+    studentd = DataInt(50)
+
+    print 'add student a: score 75'
     s.update(studenta)
     print 's3: '+str(s.data_to_value())
     
+    print 'add student b: score 25'
     s.update(studentb)
     print 's4: '+str(s.data_to_value())
 
+    print 'add student c: score 100'
+    s.update(studentc)
+    print 's4c: '+str(s.data_to_value())
+
+    print 'remove student a data:'
     s.reverse(studenta.unique_id)
     print 's5: '+str(s.data_to_value())
+
+    print 'add student d: score 50'
+    s.update(studentd)
+    print 's6: '+str(s.data_to_value())
+
 
 if __name__ == '__main__':
     main()

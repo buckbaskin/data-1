@@ -104,8 +104,23 @@ class DataInt(int):
 
     def __mul__(self, y):
         # TODO(buckbaskin): check if y is DataFloat, float, and convert
-        return DataInt(self.real * y.real, 
-            source=self.unique_id.union(y.unique_id))
+        if isinstance(y, int):
+            if isinstance(y, DataInt):
+                return DataInt(self.real * y.real,
+                    source=self.unique_id.union(y.unique_id))
+            else:
+                return DataInt(self.real * y.real, source=self.unique_id)
+        elif isinstance(y, long):
+            return DataInt(self.real * y.real, source=self.unique_id)
+        elif isinstance(y, float):
+            if isinstance(y, DataFloat):
+                return DataFloat(self.real * y.real, 
+                    source=self.unique_id.union(y.unique_id))
+            else:
+                return DataFloat(self.real * y.real, source=self.unique_id)
+        else:
+            raise TypeError('Data not compatible with operation')
+        
 
     def __neg__(self):
         return DataInt(-1*self.real, source=self.unique_id)
@@ -257,8 +272,13 @@ class DataFloat(float):
 
     def __div__(self, y):
         # TODO(buckbaskin): check if y is DataFloat, float, and convert
-        return DataFloat(self.real / y.real, 
-            source=self.unique_id.union(y.unique_id))
+        if isinstance(y, DataInt) or isinstance(y, DataFloat):
+            return DataFloat(self.real / y.real,
+                source=self.unique_id.union(y.unique_id))
+        elif isinstance(y, int) or isinstance(y, long) or isinstance(y, float):
+            return DataFloat(self.real / y.real, source=self.unique_id)
+        else:
+            raise TypeError('Data not compatible with operation')
 
     # TODO def __coerce__(self, y)
     # TODO(buckbaskin): implement coerce with more data types
