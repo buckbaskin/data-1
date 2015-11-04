@@ -102,7 +102,7 @@ class DataInt(int):
             source=self.unique_id.union(y.unique_id))
 
     def __neg__(self):
-        return DataInt(-1*, source=self.unique_id)
+        return DataInt(-1*self.real, source=self.unique_id)
 
     # TODO def __nonzero__(self, y):
     # TODO(buckbaskin): update this when there is a DataBool
@@ -134,7 +134,7 @@ class DataInt(int):
 
     def __rdivmod__(self, y):
         dia = DataInt(y.real // self.real, source=self.unique_id.union(y.unique_id))
-        dib = DataInt(y.real % self.real, source=self.unique_id.union(y.unique_id)))
+        dib = DataInt(y.real % self.real, source=self.unique_id.union(y.unique_id))
         return (dia, dib,)
 
     def __rfloordiv__(self, y):
@@ -155,7 +155,7 @@ class DataInt(int):
 
     def __rpow__(self, x, z=None):
         if z is not None:
-            return DataInt(pow(x.real, self.real, z.real), source=self.unique_id.union(y.unique_id).union(z.unique_id)))
+            return DataInt(pow(x.real, self.real, z.real), source=self.unique_id.union(y.unique_id).union(z.unique_id))
         else:
             return DataInt(pow(x.real, self.real), source=self.unique_id.union(y.unique_id))
 
@@ -197,7 +197,13 @@ class DataInt(int):
 class DataFloat(float):
 
     def __new__(cls, *args, **vargs):
-        val = float.__new__(cls, *args, **vargs)
+        if len(args) >= 1:
+            args_to_float = args[0]
+        else:
+            args_to_float = 0.0
+        print 'cls: '+str(cls)
+        print 'atf: '+str(args_to_float)
+        val = float.__new__(cls, args_to_float)
         if len(args) >= 2:
             val.__init__(args[0], args[1])
         else:
@@ -285,7 +291,7 @@ class DataFloat(float):
             source=self.unique_id.union(y.unique_id))
 
     def __neg__(self):
-        return DataFloat(-1*, source=self.unique_id)
+        return DataFloat(-1*self.real, source=self.unique_id)
 
     # TODO def __nonzero__(self, y):
     # TODO(buckbaskin): update this when there is a DataBool
@@ -317,7 +323,7 @@ class DataFloat(float):
 
     def __rdivmod__(self, y):
         dia = DataFloat(y.real // self.real, source=self.unique_id.union(y.unique_id))
-        dib = DataFloat(y.real % self.real, source=self.unique_id.union(y.unique_id)))
+        dib = DataFloat(y.real % self.real, source=self.unique_id.union(y.unique_id))
         return (dia, dib,)
 
     def __rfloordiv__(self, y):
@@ -338,7 +344,7 @@ class DataFloat(float):
 
     def __rpow__(self, x, z=None):
         if z is not None:
-            return DataFloat(pow(x.real, self.real, z.real), source=self.unique_id.union(y.unique_id).union(z.unique_id)))
+            return DataFloat(pow(x.real, self.real, z.real), source=self.unique_id.union(y.unique_id).union(z.unique_id))
         else:
             return DataFloat(pow(x.real, self.real), source=self.unique_id.union(y.unique_id))
 
