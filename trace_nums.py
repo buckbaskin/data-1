@@ -25,7 +25,10 @@ class DataInt(int):
         return weakref.proxy(val)
 
     def __init__(self, i_, local_id_tracker=None, source={}):
-        super(DataFloat, self).__init__(i_)
+        print 'init i: '+str(i_)
+        print 'init lid: '+str(local_id_tracker)
+        print 'init src: '+str(source)
+        super(DataInt, self).__init__(i_)
         
         self.unique_id = set()
 
