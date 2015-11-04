@@ -4,67 +4,10 @@ import weakref
 
 # use the math_data decorator to take any function and convert its output to 
 # traced data
-
-def that_decorator_though(function):
-    print 'that decorator though'
-    def function_wrapper(self, *args, **vargs):
-        print 'as;dlkfj called'
-        val = function(self, *args=[], **vargs)
-        dval = Data_rxyzabcaakjsdf123(val)
-        print 'dval = '+str(type(dval))
-        return dval
-    function_wrapper.id_attribute = 'strong arms'
-    return function_wrapper
-
-def math_data(size):
-    print 'math_data called with size '+str(size)
-    def func_collector(function):
-        if size <= 0:
-            print 'creating level 0 function_wrapper'
-            def function_wrapper(self):
-                print 'function_wrapper callled'
-                val = function(self)
-                print 'I got val of type '+str(type(val))
-                if hasattr(self, 'unique_id'):
-                    return Data_rxyzabc123(val, self.unique_id)
-                else:
-                    return Data_rxyzabc123(val)
-            print 'returning level 0 fw'
-            function_wrapper.id_attribute = 'solid gold'
-            return function_wrapper
-        elif size == 1:
-            def function_wrapper(self, y):
-                val = function(self, y)
-                if hasattr(self, 'unique_id'):
-                    if hasattr(y, 'unique_id'):
-                        return Data_rxyzabc123(val, self.unique_id.union(y.unique_id))
-                    return Data_rxyzabc123(val, self.unique_id)
-                else:
-                    return Data_rxyzabc123(val)
-            print 'returning level 1 fw'
-            return function_wrapper
-        elif size == 2:
-            def function_wrapper(self, y, z):
-                val = function(self, y, z)
-                if hasattr(self, 'unique_id'):
-                    if hasattr(y, 'unique_id'):
-                        if hasattr(z, 'unique_id'):
-                            return Data_rxyzabc123(val, self.unique_id.union(y.unique_id).union(z.unique_id))
-                        return Data_rxyzabc123(val, self.unique_id.union(y.unique_id))
-                    elif hasattr(z, 'unique_id'):
-                        return Data_rxyzabc123(val, self.unique_id.union(z.unique_id))
-                    return Data_rxyzabc123(val, self.unique_id)
-                else:
-                    return Data_rxyzabc123(val)
-            print 'returning level 2 fw'
-            return function_wrapper
-        elif size >= 2:
-            print 'size too too too big'
-            return function
-    return func_collector
+# def math_data # decorator
 
 # convert any data to trace data with the data function
-def Data_rxyzabc123(info, user_id=None):
+def Data(info, user_id=None):
     print 'Data called with info type: '+str(type(info))
     if isinstance(info, float):
         if user_id is None:
