@@ -126,8 +126,11 @@ class DataInt(int):
                 source=self.unique_id.union(y.unique_id))
 
     def __radd__(self, y):
-        return DataInt(y.real+self.real, 
-            source=self.unique_id.union(y.unique_id))
+        if hasattr(y, 'unique_id'):
+            return DataInt(y.real+self.real, 
+                source=self.unique_id.union(y.unique_id))
+        else:
+            return DataInt(y.real+self.real, source=self.unique_id)
 
     def __rand__(self, y):
         return DataInt(y.real&self.real, 
@@ -181,7 +184,10 @@ class DataInt(int):
         return DataInt(y.real^self.real, source=self.unique_id.union(y.unique_id))
 
     def __sub__(self, y):
-        return DataInt(self.real - y.real, source=self.unique_id.union(y.unique_id))
+        if hasattr(y, 'unique_id'):
+            return DataInt(self.real - y.real, source=self.unique_id.union(y.unique_id))
+        else:
+            return DataInt(self.real - y.real, source=self.unique_id)
 
     def __truediv__(self, y):
         return DataInt(1.0*self.real / y.real, source=self.unique_id.union(y.unique_id))
@@ -291,8 +297,11 @@ class DataFloat(float):
 
     def __mul__(self, y):
         # TODO(buckbaskin): check if y is DataFloat, float, and convert
-        return DataFloat(self.real * y.real, 
-            source=self.unique_id.union(y.unique_id))
+        if hasattr(y, 'unique_id'):
+            return DataFloat(self.real * y.real, 
+                source=self.unique_id.union(y.unique_id))
+        else:
+            return DataFloat(self.real * y.real, source=self.unique_id)
 
     def __neg__(self):
         return DataFloat(-1*self.real, source=self.unique_id)
