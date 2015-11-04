@@ -14,6 +14,11 @@ class GlobalIdTracker(object):
 class DataInt(int):
 
     def __new__(cls, *args, **vargs):
+        if len(args) >= 1:
+            args_to_int = args[0]
+        else:
+            args_to_int = 0
+
         val = int.__new__(cls, *args, **vargs)
         if len(args) >= 2:
             val.__init__(args[0], args[1])
@@ -201,29 +206,33 @@ class DataFloat(float):
             args_to_float = args[0]
         else:
             args_to_float = 0.0
-        print 'cls: '+str(cls)
-        print 'atf: '+str(args_to_float)
+
         val = float.__new__(cls, args_to_float)
-        if len(args) >= 2:
-            val.__init__(args[0], args[1])
-        else:
-            val.__init__(args[0])
+        val.__init__(*args, **vargs)
         val.strong_ref = val
         return weakref.proxy(val)
 
     def __init__(self, i_, local_id_tracker=None, source={}):
+        
+        print 'init src: '+str(source)
+        
         super(DataFloat, self).__init__(i_)
         
         self.unique_id = set()
+        print 'uid1: '+str(self.unique_id)
 
-        if local_id_tracker:
+        if isinstance(local_id_tracker, GlobalIdTracker):
             self.unique_id.update([local_id_tracker.get_id()])
+            print 'uid2: '+str(self.unique_id)
         else:
             try:
                 self.unique_id.update([gidt.get_id()])
+                print 'uid3: '+str(self.unique_id)
             except NameError:
                 raise EnvironmentError('Data Workspace not yet set')
-        self.unique_id.union(source)
+
+        self.unique_id = self.unique_id.union(source)
+        print 'uid4: '+str(self.unique_id)
 
     def __repr__(self):
         return str(self.real)
